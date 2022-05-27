@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "898298584683",
+    "project_id": "tesdak-acf72",
+    "storage_bucket": "tesdak-acf72.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:898298584683:android:041f4f8df64a1380abdb2e",
+        "android_client_info": {
+          "package_name": "com.example.tsdak"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "898298584683-3j20tt3jic4n2jvc7cr6t3o3r6flv5g3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tsdak",
+            "certificate_hash": "bfb3d9c7ff7a5226df25dca2cac43c88a6a88d99"
+          }
+        },
+        {
+          "client_id": "898298584683-hg7gbtfoejd655tfd2oh4s91lcub8gc2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2B4Sf3QHl_iezQ893vGrCwBsXlI2sj1E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "898298584683-hg7gbtfoejd655tfd2oh4s91lcub8gc2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
