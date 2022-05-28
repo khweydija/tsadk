@@ -12,12 +12,12 @@ const Category_data = const [
   ),
   Category(
     id: 'C2',
-    title: 'localisation des familles pauvre',
+    title: 'Familles Indigentes',
     imageUrl: "assets/images/kk.jpg",
   ),
   Category(
     id: 'C3',
-    title: 'Don des  médicaments',
+    title: 'Don des médicaments',
     imageUrl: "assets/images/nn.jpg",
   ),
 ];

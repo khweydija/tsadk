@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'don.dart';
+import '../../CRUD/don.dart';
 
 class MyStatefulWidget extends StatefulWidget {
   const MyStatefulWidget({Key? key}) : super(key: key);
@@ -17,27 +17,30 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
 
     return Scaffold(
-        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text('Familles Indigentes'),
+        ),
+        backgroundColor: Color.fromARGB(255, 241, 241, 240),
         body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
+              Text('وَمَنْ أَحْيَاهَا فَكَأَنَّمَا أَحْيَا النَّاسَ جَمِيعًا'),
+              SizedBox(height: 50),
+              Text('Si vous êtes un donateur, cliquez ici'),
+              SizedBox(height: 20),
               ElevatedButton(
-                style: style,
                 onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (c) => Done(),
-                    ),
-                  );
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (c) => Done()));
                 },
-                child: const Text('Si  vous  êtes  un donateur , cliquez ici'),
+                child: const Text('Donneur'),
               ),
-              const SizedBox(height: 30),
+              SizedBox(height: 30),
+              Text('Si vous cherchez un donneur cliquez ici'),
               ElevatedButton(
-                style: style,
                 onPressed: () {},
-                child: const Text('Si vous cherchez un donneur cliquez ici'),
+                child: const Text('chercheur'),
               ),
             ],
           ),
