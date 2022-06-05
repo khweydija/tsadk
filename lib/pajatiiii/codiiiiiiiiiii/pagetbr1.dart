@@ -18,16 +18,30 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Familles Indigentes'),
+          title: Text('Don de seng')
         ),
-        backgroundColor: Color.fromARGB(255, 241, 241, 240),
+        
+         
+          
+
+      
         body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text('وَمَنْ أَحْيَاهَا فَكَأَنَّمَا أَحْيَا النَّاسَ جَمِيعًا'),
-              SizedBox(height: 50),
-              Text('Si vous êtes un donateur, cliquez ici'),
+              Text(
+                'وَمَنْ أَحْيَاهَا فَكَأَنَّمَا أَحْيَا النَّاسَ جَمِيعًا',
+                style: TextStyle(
+                  fontSize: 16.0,
+                ),
+              ),
+              SizedBox(height: 80),
+              Text(
+                'Si vous voulez donner votre sang cliquez ici ',
+                style: TextStyle(
+                  fontSize: 16.0,
+                ),
+              ),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
@@ -37,7 +51,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 child: const Text('Donneur'),
               ),
               SizedBox(height: 30),
-              Text('Si vous cherchez un donneur cliquez ici'),
+              Text('Si vous avez besoin de don de seng cliquez ici'),
+              SizedBox(height: 30),
               ElevatedButton(
                 onPressed: () {},
                 child: const Text('chercheur'),

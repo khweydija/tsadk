@@ -30,6 +30,17 @@ class _DoneState extends State<Done> {
       _contactController.text = documentSnapshot['contact'].toString();
       _ageController.text = documentSnapshot['age'].toString();
     }
+    String? selectedCity;
+    List<String> citiesList = <String>[
+      " A+",
+      " A-",
+      " B+",
+      " B-",
+      " O+",
+      " O-",
+      " AB+",
+      " AB-",
+    ];
 
     await showModalBottomSheet(
         isScrollControlled: true,
@@ -42,9 +53,7 @@ class _DoneState extends State<Done> {
                 right: 20,
                 // prevent the soft keyboard from covering text fields
                 bottom: MediaQuery.of(ctx).viewInsets.bottom + 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: ListView(
               children: [
                 TextField(
                   controller: _nomController,
@@ -54,19 +63,51 @@ class _DoneState extends State<Done> {
                   controller: _prenomController,
                   decoration: const InputDecoration(labelText: 'Prenom'),
                 ),
+                DropdownButton<String>(
+                  hint: const Text(
+                    'Group sangen',
+                  ),
+                  isExpanded: true,
+                  value: selectedCity,
+                  items: citiesList.map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value,
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (_) {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    FocusScope.of(context).requestFocus(FocusNode());
+
+                    setState(() {
+                      selectedCity = _!;
+                    });
+                  },
+                ),
                 TextField(
                   controller: _groupsengController,
                   decoration: const InputDecoration(labelText: 'Group seng'),
                 ),
-                TextField(
+                TextFormField(
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
                   controller: _contactController,
                   decoration: const InputDecoration(
                     labelText: 'Contact',
                   ),
+                  validator: (contact) {
+                    if (contact == null || contact.isEmpty) {
+                      return 'Entre vos contact';
+                    }
+                    if (contact.length < 8 || contact.length > 8) {
+                      return 'Entrer correct contact00000';
+                    }
+                    return null;
+                  },
                 ),
-                TextField(
+                TextFormField(
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
                   controller: _ageController,
@@ -82,7 +123,7 @@ class _DoneState extends State<Done> {
                   onPressed: () async {
                     final String? nom = _nomController.text;
                     final String? prenom = _prenomController.text;
-                    final String? groupseng = _groupsengController.text;
+                    final String? groupseng = selectedCity;
                     final double? contact =
                         double.tryParse(_contactController.text);
                     final double? age = double.tryParse(_ageController.text);
