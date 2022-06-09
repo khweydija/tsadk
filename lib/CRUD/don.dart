@@ -1,4 +1,4 @@
-// ignore_for_file: unused_local_variable, dead_code, unused_element
+// ignore_for_file: unused_local_variable, dead_code, unused_element, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,252 +12,168 @@ class Done extends StatefulWidget {
 }
 
 class _DoneState extends State<Done> {
-  final TextEditingController _nomController = TextEditingController();
-  final TextEditingController _prenomController = TextEditingController();
-  final TextEditingController _contactController = TextEditingController();
-  final TextEditingController _ageController = TextEditingController();
-  final TextEditingController _groupsengController = TextEditingController();
+  String nom = '';
+  String prenom = '';
+  String? groupseng = 'A+';
+  String contact = '';
+  String age = '';
 
+  bool _enProcessus = false;
+  bool chargement = false;
   final CollectionReference _Don = FirebaseFirestore.instance.collection('Don');
+  final _formKey = GlobalKey<FormState>();
+  enregistrerContact() async {
+    setState(() => chargement = true);
 
-  Future<void> _createOrUpdate([DocumentSnapshot? documentSnapshot]) async {
-    String action = 'create';
-    if (documentSnapshot != null) {
-      action = 'update';
-      _nomController.text = documentSnapshot['nom'];
-      _prenomController.text = documentSnapshot['prenom'];
-      _groupsengController.text = documentSnapshot['groupseng'];
-      _contactController.text = documentSnapshot['contact'].toString();
-      _ageController.text = documentSnapshot['age'].toString();
-    }
-    String? selectedCity;
-    List<String> citiesList = <String>[
-      " A+",
-      " A-",
-      " B+",
-      " B-",
-      " O+",
-      " O-",
-      " AB+",
-      " AB-",
-    ];
-
-    await showModalBottomSheet(
-        isScrollControlled: true,
-        context: context,
-        builder: (BuildContext ctx) {
-          return Padding(
-            padding: EdgeInsets.only(
-                top: 20,
-                left: 20,
-                right: 20,
-                // prevent the soft keyboard from covering text fields
-                bottom: MediaQuery.of(ctx).viewInsets.bottom + 20),
-            child: ListView(
-              children: [
-                TextField(
-                  controller: _nomController,
-                  decoration: const InputDecoration(labelText: 'Nom'),
-                ),
-                TextField(
-                  controller: _prenomController,
-                  decoration: const InputDecoration(labelText: 'Prenom'),
-                ),
-                DropdownButton<String>(
-                  hint: const Text(
-                    'Group sangen',
-                  ),
-                  isExpanded: true,
-                  value: selectedCity,
-                  items: citiesList.map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(
-                        value,
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (_) {
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    FocusScope.of(context).requestFocus(FocusNode());
-
-                    setState(() {
-                      selectedCity = _!;
-                    });
-                  },
-                ),
-                TextField(
-                  controller: _groupsengController,
-                  decoration: const InputDecoration(labelText: 'Group seng'),
-                ),
-                TextFormField(
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  controller: _contactController,
-                  decoration: const InputDecoration(
-                    labelText: 'Contact',
-                  ),
-                  validator: (contact) {
-                    if (contact == null || contact.isEmpty) {
-                      return 'Entre vos contact';
-                    }
-                    if (contact.length < 8 || contact.length > 8) {
-                      return 'Entrer correct contact00000';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  controller: _ageController,
-                  decoration: const InputDecoration(
-                    labelText: 'Age',
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                  child: Text(action == 'create' ? 'Create' : 'Update'),
-                  onPressed: () async {
-                    final String? nom = _nomController.text;
-                    final String? prenom = _prenomController.text;
-                    final String? groupseng = selectedCity;
-                    final double? contact =
-                        double.tryParse(_contactController.text);
-                    final double? age = double.tryParse(_ageController.text);
-
-                    if (nom != null &&
-                        prenom != null &&
-                        groupseng != null &&
-                        contact != null &&
-                        age != null) {
-                      if (action == 'create') {
-                        // Persist a new product to Firestore
-                        await _Don.add({
-                          "nom": nom,
-                          "prenom": prenom,
-                          "groupseng": groupseng,
-                          "contact": contact,
-                          "age": age
-                        });
-                      }
-                      if (action == 'update') {
-                        // Update the product
-                        await _Don.doc(documentSnapshot!.id).update({
-                          "nom": nom,
-                          "prenom": prenom,
-                          "groupseng": groupseng,
-                          "contact": contact,
-                          "age": age
-                        });
-                      }
-
-                      _nomController.text = '';
-                      _prenomController.text = '';
-                      _groupsengController.text = '';
-                      _contactController.text = '';
-                      _ageController.text = '';
-
-                      // Hide the bottom sheet
-                      Navigator.of(context).pop();
-                    }
-                  },
-                )
-              ],
-            ),
-          );
-        });
+    await _Don.add({
+      "nom": nom,
+      "prenom": prenom,
+      "groupseng": groupseng,
+      "contact": contact,
+      "age": age
+    });
+    this.setState(() {
+      Navigator.pop(context);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Don de seng'),
+        backgroundColor: Color.fromARGB(255, 88, 133, 145),
+        title: Text('Nouveau Donneur'),
+        actions: <Widget>[],
       ),
-      // Using StreamBuilder to display all products from Firestore in real-time
-      body: Container(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: _nomController,
-              decoration: const InputDecoration(labelText: 'Nom'),
-            ),
-            TextField(
-              controller: _prenomController,
-              decoration: const InputDecoration(labelText: 'Prenom'),
-            ),
-            TextField(
-              controller: _groupsengController,
-              decoration: const InputDecoration(labelText: 'Group seng'),
-            ),
-            TextField(
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              controller: _contactController,
-              decoration: const InputDecoration(
-                labelText: 'Contact',
+      body: Stack(
+        children: <Widget>[
+          SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    SizedBox(height: 10.0),
+                    TextFormField(
+                      decoration: InputDecoration(
+                          labelText: 'Nom ', border: OutlineInputBorder()),
+                      validator: (val) => val!.isEmpty ? 'Entrez un nom' : null,
+                      onChanged: (val) => nom = val,
+                    ),
+                    SizedBox(height: 10.0),
+                    TextFormField(
+                      decoration: InputDecoration(
+                          labelText: 'prenom', border: OutlineInputBorder()),
+                      validator: (val) =>
+                          val!.isEmpty ? 'Entrez votre prenom' : null,
+                      onChanged: (val) => prenom = val,
+                    ),
+                    SizedBox(height: 10.0),
+                    Row(
+                      children: [Text("Choisir votre group sanguin")],
+                    ),
+                    DropdownButton(
+                      value: groupseng,
+                      items: [
+                        DropdownMenuItem(
+                          child: Text("A+"),
+                          value: 'A+',
+                        ),
+                        DropdownMenuItem(
+                          child: Text("A-"),
+                          value: "A-",
+                        ),
+                        DropdownMenuItem(
+                          child: Text("B+"),
+                          value: "B+",
+                        ),
+                        DropdownMenuItem(
+                          child: Text("B-"),
+                          value: "B-",
+                        ),
+                        DropdownMenuItem(
+                          child: Text("O+"),
+                          value: "O+",
+                        ),
+                        DropdownMenuItem(
+                          child: Text("O-"),
+                          value: "O-",
+                        ),
+                        DropdownMenuItem(
+                          child: Text("AB+"),
+                          value: "AB+",
+                        ),
+                        DropdownMenuItem(
+                          child: Text("AB-"),
+                          value: "AB-",
+                        )
+                      ],
+                      onChanged: (String? value) {
+                        setState(() {
+                          groupseng = value;
+                        });
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      keyboardType: TextInputType.phone,
+                      decoration: InputDecoration(
+                          labelText: 'Numero de tél',
+                          border: OutlineInputBorder()),
+                      validator: (val) {
+                        if (val!.length < 8 || val.length > 8) {
+                          return 'Entrer correct numero';
+                        } else {
+                          return null;
+                        }
+                      },
+                      onChanged: (val) => contact = val,
+                    ),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      decoration: InputDecoration(
+                          labelText: 'age', border: OutlineInputBorder()),
+                      validator: (val) {
+                        if (val!.length < 2 || val.length > 2) {
+                          return 'Entrer correct age';
+                        } else {
+                          return null;
+                        }
+                      },
+                      onChanged: (val) => age = val,
+                    ),
+                    SizedBox(height: 10),
+                    RaisedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          enregistrerContact();
+                        }
+                      },
+                      color: Color.fromARGB(255, 90, 148, 150),
+                      child: Text('Enregistrer',
+                          style: TextStyle(color: Colors.white)),
+                    )
+                  ],
+                ),
               ),
             ),
-            TextField(
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              controller: _ageController,
-              decoration: const InputDecoration(
-                labelText: 'Age',
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            ElevatedButton(
-              child: Text('Ajouter'),
-              onPressed: () async {
-                final String? nom = _nomController.text;
-                final String? prenom = _prenomController.text;
-                final String? groupseng = _groupsengController.text;
-                final double? contact =
-                    double.tryParse(_contactController.text);
-                final double? age = double.tryParse(_ageController.text);
-
-                if (nom != null &&
-                    prenom != null &&
-                    groupseng != null &&
-                    contact != null &&
-                    age != null) {
-                  // Persist a new product to Firestore
-                  await _Don.add({
-                    "nom": nom,
-                    "prenom": prenom,
-                    "groupseng": groupseng,
-                    "contact": contact,
-                    "age": age
-                  });
-
-                  _nomController.text = '';
-                  _prenomController.text = '';
-                  _groupsengController.text = '';
-                  _contactController.text = '';
-                  _ageController.text = '';
-
-                  // Hide the bottom sheet
-                  Navigator.of(context).pop();
-                }
-              },
-            )
-          ],
-        ),
+          ),
+          (_enProcessus)
+              ? Container(
+                  height: MediaQuery.of(context).size.height * 0.90,
+                  child: Center(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                )
+              : Container()
+        ],
       ),
-
-      // Add new product
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () => _createOrUpdate(),
-      //   child: const Icon(Icons.add),
-      // ),
     );
   }
 }

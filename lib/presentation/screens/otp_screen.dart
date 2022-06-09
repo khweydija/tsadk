@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:async';
 import 'dart:ui';
 
@@ -86,7 +88,7 @@ class OtpScreen extends StatelessWidget {
           activeColor: MyColors.blue,
           inactiveColor: MyColors.blue,
           inactiveFillColor: Colors.white,
-          activeFillColor: MyColors.blue,
+          activeFillColor: Color.fromARGB(255, 109, 153, 214),
           selectedColor: MyColors.blue,
           selectedFillColor: Colors.white,
         ),
@@ -120,7 +122,9 @@ class OtpScreen extends StatelessWidget {
         },
         child: Text(
           'terminé',
-          style: TextStyle(color: Colors.white, fontSize: 16),
+          style: TextStyle(
+            color: Color.fromARGB(255, 88, 133, 145),
+          ),
         ),
         style: ElevatedButton.styleFrom(
             maximumSize: Size(110, 50),
@@ -168,7 +172,7 @@ class OtpScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         body: Container(
           margin: EdgeInsets.symmetric(horizontal: 32, vertical: 88),
-          child: Column(children: [
+          child: ListView(children: [
             _buildIntroTexts(),
             SizedBox(
               height: 88,

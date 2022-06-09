@@ -111,6 +111,7 @@ class _bbState extends State<bb> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 88, 133, 145),
         title: const Text('Localisation des familles pauvre'),
       ),
       // Using StreamBuilder to display all products from Firestore in real-time

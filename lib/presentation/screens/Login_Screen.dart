@@ -15,8 +15,7 @@ class LoginScreen extends StatelessWidget {
   late String phoneNumber;
 
   Widget _buildIntroTextes() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return ListView(
       children: [
         Text(
           'Quel est ton numéro de téléphone',
@@ -123,7 +122,7 @@ class LoginScreen extends StatelessWidget {
         ),
         style: ElevatedButton.styleFrom(
             maximumSize: Size(110, 50),
-            primary: Colors.black,
+            primary: Color.fromARGB(255, 109, 193, 226),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(6),
             )),

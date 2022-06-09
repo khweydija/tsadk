@@ -60,7 +60,7 @@ class CategoryItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
             child: Image.asset(
               imageUrl,
-              height: 250,
+              height: 300,
               fit: BoxFit.cover,
             ),
           ),

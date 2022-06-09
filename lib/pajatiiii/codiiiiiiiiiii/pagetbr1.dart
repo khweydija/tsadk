@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:tsdak/CRUD/Donfamillies.dart';
 import '../../CRUD/don.dart';
 
 class MyStatefulWidget extends StatefulWidget {
@@ -17,48 +18,52 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Don de seng')
+      appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 88, 133, 145),
+        title: const Text(" Don de seng "),
+        centerTitle: true,
+      ),
+      body: Center(
+          child: Container(
+        height: 230,
+        width: 250,
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            color: Color.fromARGB(255, 93, 104, 93),
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+                "Si vous voulez donner votre sang cliquez sur Donneur ,Si vous avez besoin de don de seng cliquez sur chercheur",
+                style: TextStyle(color: Colors.white, fontSize: 16)),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                    child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (c) => Done()));
+                  },
+                  child: Text("Donneur"),
+                  style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(255, 122, 76, 76)),
+                )),
+                SizedBox(
+                  width: 20,
+                ),
+                Expanded(
+                    child: ElevatedButton(
+                        onPressed: () {}, child: Text("chercheur")))
+              ],
+            )
+          ],
         ),
-        
-         
-          
-
-      
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(
-                'وَمَنْ أَحْيَاهَا فَكَأَنَّمَا أَحْيَا النَّاسَ جَمِيعًا',
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-              ),
-              SizedBox(height: 80),
-              Text(
-                'Si vous voulez donner votre sang cliquez ici ',
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (c) => Done()));
-                },
-                child: const Text('Donneur'),
-              ),
-              SizedBox(height: 30),
-              Text('Si vous avez besoin de don de seng cliquez ici'),
-              SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text('chercheur'),
-              ),
-            ],
-          ),
-        ));
+      )),
+    );
   }
 }
