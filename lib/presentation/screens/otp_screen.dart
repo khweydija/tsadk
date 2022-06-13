@@ -85,11 +85,11 @@ class OtpScreen extends StatelessWidget {
           fieldHeight: 50,
           fieldWidth: 40,
           borderWidth: 1,
-          activeColor: MyColors.blue,
-          inactiveColor: MyColors.blue,
+          activeColor: Color.fromARGB(255, 93, 184, 176),
+          inactiveColor: Color.fromARGB(255, 130, 160, 160),
           inactiveFillColor: Colors.white,
-          activeFillColor: Color.fromARGB(255, 109, 153, 214),
-          selectedColor: MyColors.blue,
+          activeFillColor: Color.fromARGB(255, 135, 184, 181),
+          selectedColor: Color.fromARGB(255, 129, 190, 190),
           selectedFillColor: Colors.white,
         ),
         animationDuration: Duration(milliseconds: 300),
@@ -128,7 +128,7 @@ class OtpScreen extends StatelessWidget {
         ),
         style: ElevatedButton.styleFrom(
             maximumSize: Size(110, 50),
-            primary: Colors.black,
+            primary: Color.fromARGB(255, 88, 133, 145),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(6),
             )),
@@ -172,7 +172,7 @@ class OtpScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         body: Container(
           margin: EdgeInsets.symmetric(horizontal: 32, vertical: 88),
-          child: ListView(children: [
+          child: Column(children: [
             _buildIntroTexts(),
             SizedBox(
               height: 88,

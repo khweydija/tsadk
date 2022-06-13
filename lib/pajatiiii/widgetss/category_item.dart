@@ -70,7 +70,7 @@ class CategoryItem extends StatelessWidget {
             child: Text(
               title,
               style: TextStyle(
-                fontSize: 30,
+                fontSize: 25,
                 color: Colors.white,
               ),
             ),

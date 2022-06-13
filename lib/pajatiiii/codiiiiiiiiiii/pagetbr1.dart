@@ -29,7 +29,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         width: 250,
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-            color: Color.fromARGB(255, 93, 104, 93),
+            color: Color.fromARGB(255, 121, 117, 117),
             borderRadius: BorderRadius.all(Radius.circular(10))),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -49,7 +49,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (c) => Done()));
                   },
-                  child: Text("Donneur"),
+                  child: Text("Donneurr"),
                   style: ElevatedButton.styleFrom(
                       primary: Color.fromARGB(255, 122, 76, 76)),
                 )),

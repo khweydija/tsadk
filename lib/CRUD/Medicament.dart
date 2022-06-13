@@ -27,9 +27,9 @@ class _MedicamentState extends State<Medicament> {
         builder: (BuildContext ctx) {
           return Padding(
             padding: EdgeInsets.only(
-                top: 20,
-                left: 20,
-                right: 20,
+                top: 10,
+                left: 10,
+                right: 10,
                 // prevent the soft keyboard from covering text fields
                 bottom: MediaQuery.of(ctx).viewInsets.bottom + 20),
             child: Column(
