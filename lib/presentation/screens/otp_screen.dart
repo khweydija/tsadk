@@ -123,7 +123,7 @@ class OtpScreen extends StatelessWidget {
         child: Text(
           'terminé',
           style: TextStyle(
-            color: Color.fromARGB(255, 88, 133, 145),
+            color: Color.fromARGB(255, 213, 215, 216),
           ),
         ),
         style: ElevatedButton.styleFrom(
@@ -169,6 +169,7 @@ class OtpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         body: Container(
           margin: EdgeInsets.symmetric(horizontal: 32, vertical: 88),

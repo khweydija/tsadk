@@ -29,6 +29,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^8.0.1
+  geolocator: ^8.2.1
+  google_maps_flutter: ^2.1.8
   pin_code_fields: ^7.4.0
   
 
@@ -63,5 +65,6 @@ flutter:
      - assets/images/dd.jpg
      - assets/images/kk.jpg
      - assets/images/nn.jpg
+     - assets/images/zz.jpg
 
    

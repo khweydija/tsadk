@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -173,7 +175,7 @@ class _bbState extends State<bb> {
                                 builder: (BuildContext context) {
                                   return Expanded(
                                     child: AlertDialog(
-                                      title: Text('Welcome'),
+                                      title: Text('Voulez-vous supprimer'),
                                       content: Text('Supprimer?'),
                                       actions: [
                                         TextButton(
@@ -182,7 +184,7 @@ class _bbState extends State<bb> {
                                             Navigator.of(context).pop();
                                           },
                                           child: Text(
-                                            'YES',
+                                            'Oui',
                                             style:
                                                 TextStyle(color: Colors.black),
                                           ),
@@ -192,7 +194,7 @@ class _bbState extends State<bb> {
                                             Navigator.of(context).pop();
                                           },
                                           child: Text(
-                                            'NO',
+                                            'Non',
                                             style:
                                                 TextStyle(color: Colors.black),
                                           ),

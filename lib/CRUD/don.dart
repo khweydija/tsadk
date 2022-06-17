@@ -1,8 +1,12 @@
 // ignore_for_file: unused_local_variable, dead_code, unused_element, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Done extends StatefulWidget {
   const Done({Key? key}) : super(key: key);
@@ -17,7 +21,10 @@ class _DoneState extends State<Done> {
   String? groupseng = 'A+';
   String contact = '';
   String age = '';
-
+  TextEditingController Nom = TextEditingController();
+  TextEditingController Prenom = TextEditingController();
+  TextEditingController Contact = TextEditingController();
+  TextEditingController Age = TextEditingController();
   bool _enProcessus = false;
   bool chargement = false;
   final CollectionReference _Don = FirebaseFirestore.instance.collection('Don');
@@ -25,242 +32,192 @@ class _DoneState extends State<Done> {
   enregistrerContact() async {
     setState(() => chargement = true);
 
-    await _Don.add({
-      "nom": nom,
-      "prenom": prenom,
-      "groupseng": groupseng,
-      "contact": contact,
-      "age": age
-    });
-    this.setState(() {
-      Navigator.pop(context);
+    late CameraPosition _cameraPosition;
+    final LocationSettings locationSettings = LocationSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 100,
+    );
+    StreamSubscription<Position> positionStream =
+        Geolocator.getPositionStream(locationSettings: locationSettings)
+            .listen((Position? position) async {
+      print("lat = ${position!.altitude} , long = ${position.longitude}");
+      await _Don.add({
+        "nom": nom,
+        "prenom": prenom,
+        "groupseng": groupseng,
+        "contact": contact,
+        "age": age,
+        "lat": position.altitude,
+        "long": position.longitude
+      }).then((value) {
+        setState(() {
+          Nom.clear();
+          Prenom.clear();
+          Contact.clear();
+          Age.clear();
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("L'utilisateur est ajoute avec succses"),
+            backgroundColor: Colors.black,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      });
     });
   }
 
-  List<String> items = ['A+', 'B+', 'O'];
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          image: DecorationImage(
-              image: NetworkImage(
-                  "https://th.bing.com/th/id/OIP.2bJ9_f9aKoGCME7ZIff-ZwHaJ4?pid=ImgDet&rs=1"),
-              fit: BoxFit.cover)),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 88, 133, 145),
-          title: Text('Nouveau Donneur'),
-          actions: <Widget>[],
-        ),
-        body: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 40, vertical: 300),
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 88, 133, 145),
+        title: Text('Nouveau Donneur'),
+        actions: <Widget>[],
+      ),
+      body: Stack(
+        children: <Widget>[
+          SingleChildScrollView(
             child: Container(
-              //height: 700,
-              // width: 300,
-              transform: Matrix4.translationValues(0, -30, 0),
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  color: Colors.black45,
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              child: ListView(
-                //crossAxisAlignment: CrossAxisAlignment.center,
-                // mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: TextFormField(
-                      cursorColor: Colors.black,
+              padding: EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    SizedBox(height: 10.0),
+                    TextFormField(
+                      controller: Nom,
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                        hintText: 'Nom',
-                        hintStyle: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14.0,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.grey.shade200, width: 2),
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        floatingLabelStyle: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18.0,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.black, width: 1.5),
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
+                          labelText: 'Nom ', border: OutlineInputBorder()),
+                      validator: (val) {
+                        if (val!.isEmpty ||
+                            !RegExp(r'^[a-z A-Z]+$').hasMatch(val)) {
+                          //allow upper and lower case alphabets and space
+                          return "Enter Correct Name";
+                        }
+                      },
                     ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: TextFormField(
-                      cursorColor: Colors.black,
+                    SizedBox(height: 10.0),
+                    TextFormField(
+                      controller: Prenom,
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                        hintText: 'Prenom',
-                        hintStyle: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14.0,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.grey.shade200, width: 2),
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        floatingLabelStyle: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18.0,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.black, width: 1.5),
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
+                          labelText: 'prenom', border: OutlineInputBorder()),
+                      validator: (val) {
+                        if (val!.isEmpty ||
+                            !RegExp(r'^[a-z A-Z]+$').hasMatch(val)) {
+                          //allow upper and lower case alphabets and space
+                          return "Enter Correct prenom";
+                        }
+                      },
                     ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0),
+                    SizedBox(height: 10.0),
+                    Row(
+                      children: [Text("Choisir votre group sanguin")],
                     ),
-                    child: DropdownButtonFormField<String>(
+                    DropdownButton(
+                      value: groupseng,
+                      items: [
+                        DropdownMenuItem(
+                          child: Text("A+"),
+                          value: 'A+',
+                        ),
+                        DropdownMenuItem(
+                          child: Text("A-"),
+                          value: "A-",
+                        ),
+                        DropdownMenuItem(
+                          child: Text("B+"),
+                          value: "B+",
+                        ),
+                        DropdownMenuItem(
+                          child: Text("B-"),
+                          value: "B-",
+                        ),
+                        DropdownMenuItem(
+                          child: Text("O+"),
+                          value: "O+",
+                        ),
+                        DropdownMenuItem(
+                          child: Text("O-"),
+                          value: "O-",
+                        ),
+                        DropdownMenuItem(
+                          child: Text("AB+"),
+                          value: "AB+",
+                        ),
+                        DropdownMenuItem(
+                          child: Text("AB-"),
+                          value: "AB-",
+                        )
+                      ],
+                      onChanged: (String? value) {
+                        setState(() {
+                          groupseng = value;
+                        });
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      controller: Contact,
+                      keyboardType: TextInputType.phone,
                       decoration: InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.black, width: 1.5),
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          // borderSide: BorderSide(width: 3, color: Colors.black38)
-                        ),
-                      ),
-                      hint: Text(
-                        "Choisir votre group sanguim",
-                        style: TextStyle(fontSize: 13),
-                      ),
-                      onChanged: (value) {},
-                      items: items
-                          .map((item) => DropdownMenuItem<String>(
-                              value: item, child: Text(item)))
-                          .toList(),
+                          labelText: 'Numero de tél',
+                          border: OutlineInputBorder()),
+                      validator: (val) {
+                        if (val!.isEmpty ||
+                            !RegExp(r'^[0-9]{8}$').hasMatch(val)) {
+                          return "Enter Correct Phone Number";
+                        }
+                      },
                     ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: TextFormField(
-                      keyboardType: TextInputType.number,
-                      cursorColor: Colors.black,
+                    SizedBox(height: 10),
+                    TextFormField(
+                      controller: Age,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                        hintText: 'Numero de telephone',
-                        hintStyle: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14.0,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.grey.shade200, width: 2),
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        floatingLabelStyle: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18.0,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.black, width: 1.5),
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
+                          labelText: 'age', border: OutlineInputBorder()),
+                      validator: (val) {
+                        if (val!.length < 2 || val.length > 2) {
+                          return 'Entrer correct age';
+                        } else {
+                          return null;
+                        }
+                      },
+                      onChanged: (val) => age = val,
                     ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: TextFormField(
-                      keyboardType: TextInputType.number,
-                      cursorColor: Colors.black,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                        hintText: 'Age',
-                        hintStyle: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14.0,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.grey.shade200, width: 2),
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        floatingLabelStyle: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18.0,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.black, width: 1.5),
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  FlatButton(
-                      onPressed: () {},
-                      color: Color(0xFF1E7FFF),
-                      height: 45,
+                    SizedBox(height: 10),
+                    FlatButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          enregistrerContact();
+                        }
+                      },
+                      color: Color.fromARGB(255, 90, 148, 150),
+                      height: 50,
                       minWidth: double.infinity,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5))),
-                      child: Text(
-                        "Enregister",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ))
-                ],
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Text('Enregistrer',
+                          style: TextStyle(color: Colors.white)),
+                    )
+                  ],
+                ),
               ),
             ),
           ),
-        ),
+          (_enProcessus)
+              ? Container(
+                  height: MediaQuery.of(context).size.height * 0.90,
+                  child: Center(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                )
+              : Container()
+        ],
       ),
     );
   }

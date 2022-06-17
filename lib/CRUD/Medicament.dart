@@ -9,63 +9,72 @@ class Medicament extends StatefulWidget {
 }
 
 class _MedicamentState extends State<Medicament> {
-  final TextEditingController _contactController = TextEditingController();
+  TextEditingController _contactController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   final CollectionReference _Medicament =
       FirebaseFirestore.instance.collection('Medicament');
 
   Future<void> _createOrUpdate([DocumentSnapshot? documentSnapshot]) async {
-    String action = 'create';
+    String action = 'Ajouter';
     if (documentSnapshot != null) {
-      action = 'update';
+      action = 'Modifier';
 
-      _contactController.text = documentSnapshot['contact'].toString();
+      _contactController.text = documentSnapshot['contact'];
     }
+
     await showModalBottomSheet(
         isScrollControlled: true,
         context: context,
         builder: (BuildContext ctx) {
           return Padding(
             padding: EdgeInsets.only(
-                top: 10,
-                left: 10,
-                right: 10,
+                top: 20,
+                left: 20,
+                right: 20,
                 // prevent the soft keyboard from covering text fields
                 bottom: MediaQuery.of(ctx).viewInsets.bottom + 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextField(
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  controller: _contactController,
-                  decoration: const InputDecoration(
-                    labelText: 'contact',
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                  child: Text(action == 'create' ? 'Create' : 'Update'),
-                  onPressed: () async {
-                    final double? contact =
-                        double.tryParse(_contactController.text);
-                    if (contact != null) {
-                      if (action == 'create') {
-                        // Persist a new product to Firestore
-                        await _Medicament.add({"contact": contact});
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextFormField(
+                    controller: _contactController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'contact',
+                    ),
+                    validator: (val) {
+                      if (val!.isEmpty ||
+                          !RegExp(r'^[0-9]{8}$').hasMatch(val)) {
+                        return "Enter Correct Phone Number";
                       }
+                    },
+                  ),
+                  ElevatedButton(
+                    child: Text(action == 'Ajouter' ? 'Ajouter' : 'Modifier'),
+                    onPressed: () async {
+                      final String? contact = _contactController.text;
 
-                      _contactController.text = '';
+                      if (_formKey.currentState!.validate()) {
+                        if (action == 'Ajouter') {
+                          // Persist a new product to Firestore
+                          await _Medicament.add({
+                            "contact": contact,
+                          });
+                        }
 
-                      // Hide the bottom sheet
-                      Navigator.of(context).pop();
-                    }
-                  },
-                )
-              ],
+                        _contactController.clear();
+
+                        // Hide the bottom sheet
+                        Navigator.of(context).pop();
+                      }
+                    },
+                  )
+                ],
+              ),
             ),
           );
         });
@@ -75,7 +84,8 @@ class _MedicamentState extends State<Medicament> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Don des médicaments'),
+        backgroundColor: Color.fromARGB(255, 88, 133, 145),
+        title: const Text('Liste des donneurs '),
       ),
       // Using StreamBuilder to display all products from Firestore in real-time
       body: StreamBuilder(
@@ -93,11 +103,13 @@ class _MedicamentState extends State<Medicament> {
                     title: Text(documentSnapshot['contact'].toString()),
                     trailing: SizedBox(
                       width: 100,
-                      child: Row(children: [
-                        // Press this button to edit a single product
+                      child: Row(
+                        children: [
+                          // Press this button to edit a single product
 
-                        // This icon button is used to delete a single product
-                      ]),
+                          // This icon button is used to delete a single product
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -110,9 +122,13 @@ class _MedicamentState extends State<Medicament> {
           );
         },
       ),
+      // Add new product
       floatingActionButton: FloatingActionButton(
         onPressed: () => _createOrUpdate(),
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          color: Color.fromARGB(255, 3, 70, 66),
+        ),
       ),
     );
   }
