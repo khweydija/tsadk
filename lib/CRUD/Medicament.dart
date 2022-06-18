@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -103,13 +105,6 @@ class _MedicamentState extends State<Medicament> {
                     title: Text(documentSnapshot['contact'].toString()),
                     trailing: SizedBox(
                       width: 100,
-                      child: Row(
-                        children: [
-                          // Press this button to edit a single product
-
-                          // This icon button is used to delete a single product
-                        ],
-                      ),
                     ),
                   ),
                 );

@@ -1,4 +1,6 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:tsdak/CRUD/Donfamillies.dart';
@@ -19,51 +21,90 @@ class _FamillesState extends State<Familles> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 88, 133, 145),
-        title: const Text("Familles Indigentes "),
-        centerTitle: true,
-      ),
-      body: Center(
-          child: Container(
-        height: 230,
-        width: 250,
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            color: Color.fromARGB(255, 163, 168, 163),
-            borderRadius: BorderRadius.all(Radius.circular(10))),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-                "si vous voulez localiser des femmes en besoin d aide Cliquez sur Bénévole ,si vous avez besoin daide sociale cliquez sur chercheur ",
-                style: TextStyle(color: Colors.white, fontSize: 16)),
-            SizedBox(
-              height: 20,
-            ),
-            Row(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                    child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (c) => bb()));
-                  },
-                  child: Text("Bénévole"),
-                  style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(255, 133, 108, 108)),
-                )),
-                SizedBox(
-                  width: 20,
-                ),
-                Expanded(
-                    child: ElevatedButton(
-                        onPressed: () {}, child: Text("chercheur")))
-              ],
-            )
-          ],
+          backgroundColor: Color.fromARGB(255, 88, 133, 145),
+          title: const Text("Familles Indigentes "),
+          centerTitle: true),
+      body: Column(children: <Widget>[
+        Image.asset('assets/images/yy.jpg'),
+        SizedBox(
+          height: 40,
         ),
-      )),
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                child: Text('Bienvenue',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold)),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 30,
+        ),
+        Container(
+          child: Text(
+              'Si vous voulez localiser des femmes en besoin d aide Cliquez  sur Bénévole ,si vous avez besoin daide sociale cliquez sur chercheur',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold)),
+        ),
+        SizedBox(
+          height: 30,
+        ),
+        Container(
+          child: Row(children: <Widget>[
+            Expanded(
+                child: FlatButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(35),
+              ),
+              color: Color.fromARGB(255, 109, 162, 172),
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (c) => bb()));
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                alignment: Alignment.center,
+                width: double.infinity,
+                child: Text(
+                  'Bénévole',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            )),
+            SizedBox(
+              width: 15,
+            ),
+            Expanded(
+                child: FlatButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25),
+              ),
+              color: Color.fromARGB(255, 107, 116, 117),
+              onPressed: () {
+                 
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                alignment: Alignment.center,
+                width: double.infinity,
+                child: Text(
+                  'chercheur',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ))
+          ]),
+        ),
+      ]),
     );
   }
 }

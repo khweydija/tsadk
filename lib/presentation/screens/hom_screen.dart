@@ -34,7 +34,7 @@ class _HomScreenState extends State<HomScreen> {
               width: 10,
             ),
             Container(
-              child: Text("Home Page"),
+              child: Text(" Page d'acceueil "),
             ),
             SizedBox(
               width: 120,

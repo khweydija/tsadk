@@ -19,20 +19,29 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
 
     return Scaffold(
+       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 88, 133, 145),
+        title: const Text(" Don de seng "),
+        centerTitle: true,
+      ),
+    
        
       body: Container(
         color: Colors.black,
         child: Stack(children: [
           Positioned.fill(
               child: Opacity(
-                  opacity: 0.4,
+                  opacity: 0.3,
                   child: Image.asset(
-                    'assets/images/zz.jpg',
+                    'assets/images/mm.jpg',
+                    width: 500,
+                    
+                    
                     fit: BoxFit.cover,
                   ))),
           Center(
             child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+               mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   SizedBox(height: 40),
@@ -49,7 +58,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       'Si vous voulez donner votre sang cliquez sur Donneur ,Si vous avez besoin de don de seng cliquez sur chercheur',
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.white, fontSize: 15)),
-                  SizedBox(height: 50),
+                  SizedBox(height: 70),
 
                   Padding(
                     padding: const EdgeInsets.all(10),
@@ -60,7 +69,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       },
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(400)),
-                      color: Color.fromARGB(248, 20, 98, 117),
+                      color: Color.fromARGB(255, 88, 133, 145),
                       padding: EdgeInsets.all(15),
                       child: Text(
                         'Donneur',
