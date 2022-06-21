@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 class bb extends StatefulWidget {
   const bb({Key? key}) : super(key: key);
@@ -28,6 +29,7 @@ class _bbState extends State<bb> {
       _contactController.text = documentSnapshot['contact'];
     }
 
+    Position? position;
     await showModalBottomSheet(
         isScrollControlled: true,
         context: context,
@@ -52,7 +54,7 @@ class _bbState extends State<bb> {
                       if (val!.isEmpty ||
                           !RegExp(r'^[a-z A-Z]+$').hasMatch(val)) {
                         //allow upper and lower case alphabets and space
-                        return "Enter Correct Name";
+                        return "Entrer Correctement votre nom";
                       }
                     },
                   ),
@@ -63,7 +65,7 @@ class _bbState extends State<bb> {
                       if (val!.isEmpty ||
                           !RegExp(r'^[a-z A-Z]+$').hasMatch(val)) {
                         //allow upper and lower case alphabets and space
-                        return "Enter Correct Name";
+                        return "Entrer Correctement votre prénom ";
                       }
                     },
                     onChanged: (val) {
@@ -80,7 +82,7 @@ class _bbState extends State<bb> {
                     validator: (val) {
                       if (val!.isEmpty ||
                           !RegExp(r'^[0-9]{8}$').hasMatch(val)) {
-                        return "Enter Correct Phone Number";
+                        return "Entrer Correct votre contact";
                       }
                     },
                   ),
@@ -94,11 +96,14 @@ class _bbState extends State<bb> {
 
                       if (_formKey.currentState!.validate()) {
                         if (action == 'Ajouter') {
+                          position = await _determinePosition();
                           // Persist a new product to Firestore
                           await _familles.add({
                             "nom": nom,
                             "prenom": prenom,
                             "contact": contact,
+                            "lat": position!.latitude,
+                            "long": position!.longitude,
                           });
                         }
                         if (action == 'Modifier') {
@@ -107,6 +112,8 @@ class _bbState extends State<bb> {
                             "nom": nom,
                             "prenom": prenom,
                             "contact": contact,
+                            "lat": position!.latitude,
+                            "long": position!.longitude,
                           });
                         }
 
@@ -132,7 +139,50 @@ class _bbState extends State<bb> {
 
     // Show a snackbar
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Vous avez supprimé la famille avec succès')));
+        content: Text('Vous avez supprimé la famille avec succés')));
+  }
+
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    return await Geolocator.getCurrentPosition();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _determinePosition();
   }
 
   @override
@@ -175,8 +225,9 @@ class _bbState extends State<bb> {
                                 builder: (BuildContext context) {
                                   return Expanded(
                                     child: AlertDialog(
-                                      title: Text('Voulez-vous supprimer'),
-                                      content: Text('Supprimer?'),
+                                      title: Text(
+                                          'Voulez-vous vraiment supprimer?'),
+                                      content: Text('Supprimer'),
                                       actions: [
                                         TextButton(
                                           onPressed: () {

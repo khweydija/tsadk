@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:tsdak/CRUD/Donfamillies.dart';
+import 'package:tsdak/CRUD/Localisations.dart';
 import '../../CRUD/don.dart';
 
 class Familles extends StatefulWidget {
@@ -49,7 +50,7 @@ class _FamillesState extends State<Familles> {
         ),
         Container(
           child: Text(
-              'Si vous voulez localiser des femmes en besoin d aide Cliquez  sur Bénévole ,si vous avez besoin daide sociale cliquez sur chercheur',
+              'Si vous voulez localiser des femmes en besoin d aide Cliquez  sur  Bénévole ,si vous avez besoin d aide sociale cliquez sur chercheur',
               style: TextStyle(
                   color: Colors.black,
                   fontSize: 15,
@@ -90,7 +91,8 @@ class _FamillesState extends State<Familles> {
               ),
               color: Color.fromARGB(255, 107, 116, 117),
               onPressed: () {
-                 
+                Navigator.of(context).push(
+                                MaterialPageRoute(builder: (c) => Localisation(don: false,)));
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 16),

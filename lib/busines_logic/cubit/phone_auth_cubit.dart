@@ -68,6 +68,7 @@ class PhoneAuthCubit extends Cubit<PhoneAuthState> {
 
   User getLoggesInUser() {
     User firebaseUser = FirebaseAuth.instance.currentUser!;
+    
     return firebaseUser;
   }
 }

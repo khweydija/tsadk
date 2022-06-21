@@ -16,6 +16,12 @@ class Done extends StatefulWidget {
 }
 
 class _DoneState extends State<Done> {
+  @override
+  void initState() {
+    super.initState();
+    _determinePosition();
+  }
+
   String nom = '';
   String prenom = '';
   String? groupseng = 'A+';
@@ -29,27 +35,57 @@ class _DoneState extends State<Done> {
   bool chargement = false;
   final CollectionReference _Don = FirebaseFirestore.instance.collection('Don');
   final _formKey = GlobalKey<FormState>();
+  Position? position;
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    return await Geolocator.getCurrentPosition();
+  }
+
   enregistrerContact() async {
     setState(() => chargement = true);
-
-    late CameraPosition _cameraPosition;
-    final LocationSettings locationSettings = LocationSettings(
-      accuracy: LocationAccuracy.high,
-      distanceFilter: 100,
-    );
-    StreamSubscription<Position> positionStream =
-        Geolocator.getPositionStream(locationSettings: locationSettings)
-            .listen((Position? position) async {
-      print("lat = ${position!.altitude} , long = ${position.longitude}");
-      await _Don.add({
-        "nom": nom,
-        "prenom": prenom,
+    position = await _determinePosition();
+      print("lat = ${position!.latitude} , long = ${position!.longitude}");
+  await _Don.add({
+        "nom": Nom.text,
+        "prenom": Prenom.text,
         "groupseng": groupseng,
-        "contact": contact,
+        "contact": Contact.text,
         "age": age,
-        "lat": position.altitude,
-        "long": position.longitude
-      }).then((value) {
+        "lat": position!.latitude,
+        "long": position!.longitude
+      }).whenComplete(() {
         setState(() {
           Nom.clear();
           Prenom.clear();
@@ -58,13 +94,12 @@ class _DoneState extends State<Done> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("L'utilisateur est ajoute avec succses"),
+            content: Text("Le donneur est ajouté avec succés"),
             backgroundColor: Colors.black,
             duration: Duration(seconds: 3),
           ),
         );
       });
-    });
   }
 
   @override
@@ -94,7 +129,7 @@ class _DoneState extends State<Done> {
                         if (val!.isEmpty ||
                             !RegExp(r'^[a-z A-Z]+$').hasMatch(val)) {
                           //allow upper and lower case alphabets and space
-                          return "Enter Correct Name";
+                          return "Entrer Correctement votre nom ";
                         }
                       },
                     ),
@@ -107,13 +142,13 @@ class _DoneState extends State<Done> {
                         if (val!.isEmpty ||
                             !RegExp(r'^[a-z A-Z]+$').hasMatch(val)) {
                           //allow upper and lower case alphabets and space
-                          return "Enter Correct prenom";
+                          return "Entrer Correctement votre prénom";
                         }
                       },
                     ),
                     SizedBox(height: 10.0),
                     Row(
-                      children: [Text("Choisir votre group sanguin")],
+                      children: [Text("Choisir votre groupe sanguin")],
                     ),
                     DropdownButton(
                       value: groupseng,
@@ -167,7 +202,7 @@ class _DoneState extends State<Done> {
                       validator: (val) {
                         if (val!.isEmpty ||
                             !RegExp(r'^[0-9]{8}$').hasMatch(val)) {
-                          return "Enter Correct Phone Number";
+                          return "Entrer Correctement votre numero de télephone";
                         }
                       },
                     ),
@@ -180,7 +215,7 @@ class _DoneState extends State<Done> {
                           labelText: 'age', border: OutlineInputBorder()),
                       validator: (val) {
                         if (val!.length < 2 || val.length > 2) {
-                          return 'Entrer correct age';
+                          return 'Entrer correctement votre  age';
                         } else {
                           return null;
                         }

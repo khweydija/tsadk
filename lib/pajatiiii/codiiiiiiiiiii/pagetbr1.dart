@@ -19,13 +19,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
 
     return Scaffold(
-       appBar: AppBar(
+      appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 88, 133, 145),
-        title: const Text(" Don de seng "),
+        title: const Text(" Don de sang "),
         centerTitle: true,
       ),
-    
-       
       body: Container(
         color: Colors.black,
         child: Stack(children: [
@@ -35,13 +33,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   child: Image.asset(
                     'assets/images/mm.jpg',
                     width: 500,
-                    
-                    
                     fit: BoxFit.cover,
                   ))),
           Center(
             child: Column(
-               mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   SizedBox(height: 40),
@@ -55,7 +51,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   ),
                   SizedBox(height: 40),
                   Text(
-                      'Si vous voulez donner votre sang cliquez sur Donneur ,Si vous avez besoin de don de seng cliquez sur chercheur',
+                      'Si vous voulez donner votre sang cliquez sur Donneur ,Si vous avez besoin de don de sang cliquez sur chercheur',
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.white, fontSize: 15)),
                   SizedBox(height: 70),
@@ -80,14 +76,16 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       ),
                     ),
                   ),
-            SizedBox(height: 10),
+                  SizedBox(height: 10),
 
                   Padding(
                       padding: const EdgeInsets.all(10),
                       child: FlatButton(
                           onPressed: () {
-                            Navigator.of(context).push(
-                                MaterialPageRoute(builder: (c) => Localisation()));
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (c) => Localisation(
+                                      don: true,
+                                    )));
                           },
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(400)),
